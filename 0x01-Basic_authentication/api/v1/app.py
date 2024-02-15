@@ -21,7 +21,7 @@ if os.getenv('AUTH_TYPE'):
 
 @app.before_request
 def before_request():
-    """fdsfsfdfsfdfsfdf"""
+    """the function that is processed before we process the request"""
     if auth is None:
         return
     excluded_paths = ['/api/v1/status/',
