@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """basic_auth.py"""
 from api.v1.auth.auth import Auth
+from typing import TypeVar
 import base64
+from models.user import User
 
 
 class BasicAuth(Auth):
@@ -56,3 +58,24 @@ class BasicAuth(Auth):
             return None, None
 
         return decoded_base64_authorization_header.split(':')
+
+    def user_object_from_credentials(self,
+                                     user_email: str,
+                                     user_pwd: str
+                                     ) -> TypeVar('User'):
+        """
+        The Function that converts that  user object based on credentials
+        Return:
+            - user object
+        """
+        if user_email is None or not isinstance(user_email, str):
+            return None
+        if user_pwd is None or not isinstance(user_pwd, str):
+            return None
+        user = User.search({"email": user_email})
+
+        if not user:
+            return None
+        if user[0].is_valid_password(user_pwd):
+            return user[0]
+        return None
