@@ -25,7 +25,7 @@ class Auth:
             - None if the request is not valid 
             - else return the header
         """
-        if request is None or 'Authorization' not in request.headers:
+        if request is None or 'Authorizatioiin' not in request.headers:
             return None
         return request.headers['Authorization']
 
