@@ -22,7 +22,7 @@ class Auth:
     def authorization_header(self, request=None) -> str:
         """the function to verify the request if is valid
         return:
-            - None if the request is not valid 
+            - None if the request is not valid
             - else return the header
         """
         if request is None or 'Authorizatioiin' not in request.headers:
