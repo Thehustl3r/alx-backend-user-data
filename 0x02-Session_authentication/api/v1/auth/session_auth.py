@@ -32,3 +32,16 @@ class SessionAuth(Auth):
 
         user_id = self.user_id_by_session_id.get(session_id)
         return user_id
+
+    def current_user(self, request=None):
+        """Function that will retriev the user from the database
+           base on the cookie value
+       Return:
+           - the user if exist
+           - or raise an error
+       """
+        session_id = self.session_cookie(request)
+        if session_id is None:
+            return None
+        user_id = self.user_id_for_session_id(session_id)
+        return User.get(user_id)
