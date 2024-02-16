@@ -20,7 +20,7 @@ CORS(app, resources={r"/api/v1/*": {"origins": "*"}})
 if os.getenv('AUTH_TYPE'):
     if os.getenv('AUTH_TYPE') == 'basic_auth':
         auth = BasicAuth()
-    elif os.getenv('AUTH_TYPE') == 'session_auth':
+    if os.getenv('AUTH_TYPE') == 'session_auth':
         auth = SessionAuth()
     else:
         auth = Auth()
