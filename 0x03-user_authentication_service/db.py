@@ -64,3 +64,26 @@ class DB:
             raise e
         except InvalidRequestError:
             raise InvalidRequestError
+
+    def update_user(self, user_id: int, **kwargs) -> None:
+        """"
+        Update the user in the database
+        args:
+            user_id
+        Return:
+            - None
+        Raise:
+            - ValueError: when the value is not valid
+        """
+        try:
+            user = self.find_user_by(id=user_id)
+            for key, value in kwargs.items():
+                if hasattr(user, key):
+                    setattr(user, key, value)
+                else:
+                    raise ValueError
+            self._session.commit()
+        except NoResultFound as e:
+            raise e
+        finally:
+            self._session.close()
