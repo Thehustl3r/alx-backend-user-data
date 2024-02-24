@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """app module"""
 from flask import Flask, jsonify, request, abort, redirect, make_response
-from auth import Auth
+from auth import AUTH
 
 
+AUTH = AUTH()
 app = Flask(__name__)
-auth = Auth()
 
 
 @app.route("/", methods=['GET'], strict_slashes=False)
@@ -28,7 +28,7 @@ def users():
     email = data.get('email')
     password = data.get('password')
     try:
-        auth.register_user(email, password)
+        AUTH.register_user(email, password)
         return jsonify({"email": email, "message": "user created"})
     except ValueError:
         return jsonify({"message": "email already registered"}), 400
@@ -47,9 +47,9 @@ def login():
     """
     email = request.form.get('email')
     password = request.form.get('password')
-    is_valid = auth.valid_login(email=email, password=password)
+    is_valid = AUTH.valid_login(email=email, password=password)
     if is_valid:
-        session_id = auth.create_session(email=email)
+        session_id = AUTH.create_session(email=email)
         res = jsonify({"email": email, "message": "logged in"})
         res.set_cookie("session_id", session_id)
         return res, 200
@@ -66,22 +66,22 @@ def logout():
         - Nothing
     """
     session_id = request.cookies.get('session_id')
-    user = auth.get_user_from_session_id(session_id=session_id)
+    user = AUTH.get_user_from_session_id(session_id=session_id)
 
     if user is not None:
-        auth.destroy_session(user.id)
+        AUTH.destroy_session(user.id)
         return redirect("/", code=302)
     else:
         return jsonify({"error": "Forbidden"}), 403
 
 
-@app.route('/profile/', methods=['GET'], strict_slashes=False)
+@app.route('/profile', methods=['GET'], strict_slashes=False)
 def profile():
     """
-    GET /provile/
+    GET /profile/
     """
     session_id = request.cookies.get('session_id')
-    user = auth.get_user_from_session_id(session_id)
+    user = AUTH.get_user_from_session_id(session_id)
     if user is not None:
         return jsonify({"email": user.email}), 200
     return jsonify({'error': "Forbidden"}), 403
@@ -99,7 +99,7 @@ def get_reset_password_token():
     """
     email = request.form.get('email')
     try:
-        reset_token = auth.get_reset_password_token(email=email)
+        reset_token = AUTH.get_reset_password_token(email=email)
         return jsonify({"email": email, "reset_token": reset_token}), 200
     except ValueError:
         return 403
@@ -122,10 +122,10 @@ def update_password():
     reset_token = request.form.get('request_token')
 
     try:
-        auth.update_password(reset_token=reset_token, password=password)
+        AUTH.update_password(reset_token=reset_token, password=password)
         return jsonify({"email": email, "message": "Password updated"}), 200
-    except ValueError:
-        return 403
+    except ValueError as e:
+        return jsonify({"error": "Forbidden"}), 403
 
 
 if __name__ == "__main__":

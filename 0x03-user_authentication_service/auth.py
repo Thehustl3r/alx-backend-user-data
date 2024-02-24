@@ -7,7 +7,7 @@ from sqlalchemy.orm.exc import NoResultFound
 import uuid
 
 
-class Auth:
+class AUTH:
     """Auth class to interact with the authentication database.
     """
 
@@ -137,10 +137,10 @@ class Auth:
         try:
             user = self._db.find_user_by(email=email)
             reset_token = self._generate_uuid()
-            self._db.update_user(reset_token=reset_token)
+            self._db.update_user(user_id=user.id, reset_token=reset_token)
             return reset_token
         except NoResultFound:
-            raise ValueError()
+            raise ValueError
 
     def update_password(self, password: str, reset_token: str) -> None:
         """"
