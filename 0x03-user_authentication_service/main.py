@@ -7,17 +7,18 @@ user = AUTH.register_user(
     'test'
 )
 
-reset_token = AUTH.get_reset_password_token(
+session_id = AUTH.create_session(
     'test@test.com'
 )
+print(user.session_id)
 
-AUTH.update_password(
-    reset_token,
-    'test'
-)
+AUTH.destroy_session(user.id)
+print(user.session_id)
+print(user.email)
 
-if user.reset_token is not None:
-    print("Reset token not set to none after updating password. Password update did not work correctly.")
+if user.session_id is not None:
+    print("destroy is not suceesful.")
     exit(0)
+
 
 print("OK", end='')
