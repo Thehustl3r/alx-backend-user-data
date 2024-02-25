@@ -58,10 +58,10 @@ class DB:
         try:
             user = self._session.query(User).filter_by(**kwargs).first()
             if not user:
-                raise NoResultFound("No useer")
+                raise NoResultFound
             return user
-        except NoResultFound as e:
-            raise e
+        except NoResultFound:
+            raise NoResultFound
         except InvalidRequestError:
             raise InvalidRequestError
 
@@ -85,5 +85,3 @@ class DB:
             self._session.commit()
         except NoResultFound as e:
             raise e
-        finally:
-            self._session.close()
