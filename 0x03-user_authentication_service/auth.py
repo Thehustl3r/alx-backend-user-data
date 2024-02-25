@@ -120,8 +120,7 @@ class AUTH:
         Function that destroy the user id
         """
         try:
-            self._db.find_user_by(id=user_id)
-            self._db.update_user(user_id=user_id, session_Id=None)
+            self._db.update_user(user_id=user_id, session_id=None)
             return None
         except NoResultFound:
             return None
